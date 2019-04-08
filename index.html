@@ -1,0 +1,94 @@
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <h1>Hello, world!</h1>
+
+    <div class="row" id="comic_list">
+        
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
+
+
+
+<script>
+
+$(document).ready(function(){
+
+        
+    getComics();
+
+    function getComics()
+    {
+        var url = 'http://gateway.marvel.com/v1/public/comics?ts=1';
+        var apikey = '&apikey=b5dd158dd0e856443db7fb726fbc6bc9';
+        var hash = '&hash=80182fcb24c6426319114b9e34eafed6'
+        var request = doRequest(url + apikey + hash )
+
+        request.done(function(response){
+            var comics = response.data.results;
+
+
+            var comic = comics[0];
+
+            var cards = comics.map(function(comic){
+                return GenerateCard(comic);
+            })
+
+
+
+            $('#comic_list').html(cards);
+
+
+            
+
+
+        })
+    }
+
+    function GenerateCard(comic)
+    {
+        var card = '<div class="col-md-3">'+
+            '<div class="card" style="width: 18rem;">'+
+                '<img class="card-img-top" src=" ' + comic.thumbnail.path + '.' + comic.thumbnail.extension +'" >'+
+                '<div class="card-body">'+
+                  '<h5 class="card-title" > ' + comic.title + '</h5>'+
+                  '<p class="card-text" >' + comic.description + '</p> '+                
+               '</div>'+
+              '</div>'+          
+        '</div>';
+
+        return card;
+
+    }
+
+    function doRequest(url){
+        return $.ajax({
+            method: "GET",
+            url: url 
+
+    });
+    }
+
+       
+
+
+});
+
+
+</script>
